@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% bootstrap_messages %}
+
+{% block content %}
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      Article by <a href="{% url 'news:profile-detail' username=post.created_by %}">{{ post.created_by }}</a> posted on {{ post.publication_date }}
+    </div>
+    <div class="card-body">
+      <h2 class="card-title font-weight-bold">{{ post.title }}</h2>
+      <p>{{ post.description }}</p>
+    </div>
+  </div>
+  {% if post.created_by == user %}
+    <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'news:article-edit' post.id %}">edit article</a>
+    </div>
+  {% endif %}
+</div>
+
+<br>
+
+<div class="container">
+  <p>Comments: {{ post.comment_set.count }}</p>
+  <ul class="list-group">
+    {% for comments in post.comment_set.all %}
+    <li class="list-group-item">{{ comments.comment_body }} by <small><a class="text-right" href="{% url 'news:profile-detail' username=comments.user_comment %}">{{ comments.user_comment }}</a></small> | {{ comments.comment_date | timesince}} ago</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<br>
+
+
+<div class="container">
+  <h3>Leave a comment</h3>
+  {% if request.user.is_authenticated %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary">post comment</button>
+    {% endbuttons %}
+  </form>
+  {% else %}
+  <a href="{% url 'account_login' %}">login to comment</a>
+  {% endif %}
+</div>
+{% endblock %}

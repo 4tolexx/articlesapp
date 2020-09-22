@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+  .body {
+    background: #F1F3FA;
+  }
+  .profile {
+    margin: 20px 0;
+  }
+
+  .profile-sidebar {
+    padding: 20px 0 10px 0;
+    background: #fff;
+  }
+
+  .profile-userpic img {
+    float: none;
+    margin: 0 auto;
+    width: 50%;
+    height: 50%;
+    -webkit-border-radius: 50% !important;
+    -moz-border-radius: 50% !important;
+    border-radius: 50% !important;
+  }
+
+  .profile-usertitle {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .profile-usertitle-name {
+    color: #5a7391;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+
+  .profile-usertitle-job {
+    text-transform: lowercase;
+    color: #5b9bd1;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+
+  .profile-userbuttons {
+    text-align: center;
+    margin-top: 10px;
+  }
+</style>
+
+<div class="container">
+  <div class="row profile">
+    <div class="col-md-3">
+      <div class="profile-sidebar">
+        {% if user.profile.image %}
+        <div class="profile-userpic" class="img-responsive">
+          <img src="{{ user.profile.image.url }}" class="img-fluid rounded">
+        </div>
+        {% endif %}
+
+        <div class="profile-usertitle">
+          {% if user.profile.user %}
+          <div class="profile-usertitle-name">
+            user: {{ user.profile.user }}
+          </div>
+          {% endif %}
+
+          {% if user.profile.full_name %}
+          <div class="profile-usertitle-name">
+            name: {{ user.profile.full_name }}
+          </div>
+          {% endif %}
+
+          {% if user.profile.date_joined %}
+          <div class="profile-usertitle-name">
+            Joined: {{ user.profile.date_joined | timesince }} ago
+          </div>
+          {% endif %}
+
+          {% if user.profile.bio %}
+          <div class="profile-usertitle-job">
+            bio: {{ user.profile.bio }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="profile-userbuttons">
+          {% if user == request.user %}
+          <a href="{% url 'news:profile-edit' %}" role="button" class="btn btn-success btn-sm">update profile</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <p>{{ user }}'s articles</p>
+  {% if posts%}
+  <ul class="list-group">
+    {% for post in posts %}
+    <li class="list-group-item"><a href="{% url 'news:article-detail' pk=post.id %}"> {{ post.title }} </a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% block content %}
+    
+
+
+    {% if not post.comment_set.all %}
+ <small>no comments yet</small>
+  {% endif%}
+
+  {% for comments in comment %}
+  <P>{{ comments.body}} by <small>{{ comments.comment_user }}</small></P>
+  {% endfor %}
+
+  
+
+    
+{% endblock %}

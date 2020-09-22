@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for posts in post_list %}
+<div class="container-lg">
+    <ul class="list-group">
+        <li class="list-group-item">
+          <h3><a href="{% url 'news:article-detail' pk=posts.id %}">{{ posts.title }}</a></h3>
+          <br/>
+          <small>Posted on {{ posts.publication_date | timesince }} ago by <a href="{% url 'news:profile-detail' username=posts.created_by %}">{{ posts.created_by }}</a></small>
+          <hr>
+        </li>
+    </ul>
+</div>   
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+      {% if page_obj.has_previous %}
+      <a href="?page=1">&laquo; first</a>
+      <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+    <span class="current">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">next</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+    </span>
+</div>
+  
+{% endblock %}
